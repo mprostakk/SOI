@@ -1,0 +1,92 @@
+SOI - implementacja
+
+Jeden semafor - 0 punktów 
+Najlepiej 5 semaforów !!!
+
+5 binarnych !!!
+
+Semafory BInarne:
+
+prodEven(0)
+prodOdd(0)
+consEven(0)
+consOdd(0)
+mutex(1)
+
+Zmienne globalne:
+Unsigned int
+numOfProdEvenWaiting = 0
+numOfProdOddWaiting = 0
+
+numOfConsEvenWaiting = 0
+numOfConsEvenWating = 0
+
+Void prodEven() {
+
+while(true){
+	mutex.P()
+	
+	if( ! canProdEven() ) {
+
+        // czy nie mozemy wykonac zadania
+        
+        ++numOfProdEvenWaiting
+        mutex.V()
+        prodEven.P()
+        --numOfProdEvenWaiting
+
+	}
+
+    even_number = generateEvenNumber()
+    buffer.push(even_number)
+
+    if (canProdOdd() && numOfProdOddWaiting  > 0) {
+        prodOdd.V()
+    }
+    else if (canConsEven() && numOfConsEvenWaiting > 0) {
+        consEven.V()
+    }
+    else if (canConsOdd && numOfConsOddWaiting) {
+        consOff.V()
+    }
+    else {
+        mutex.V();
+    }
+
+	sleep(random + const)
+}
+}
+
+
+PRZEKAZANIE SEKCJI KRYTYCZNEJ !!!
+
+
+TESTOWANIE !!!
+
+lpthread
+wą†ki !!!
+
+---
+
+proste testy !!!
+
+zaklesa`zczenie
+
+przykład z zakleszczeniem !!!
+
+mutex na 0
+// zakomentowac mutex.v()
+
+po jednym w kazdej grupie
+
+sami konsumenci
+
+sami prod
+
+po even
+
+po uneven
+
+wszystkie
+
+zakleszczenie
