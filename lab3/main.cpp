@@ -3,6 +3,11 @@
 #include <stdio.h>
 #include <semaphore.h>
 #include <unistd.h>
+#include <stdlib.h>
+#include <time.h>
+
+#include <chrono>
+#include <thread>
 
 #include "buffer.h"
 
@@ -68,6 +73,13 @@ bool can_consume_odd() {
 }
 
 
+void random_sleep() {
+    int random_offset = rand() % 100;
+    std::chrono::milliseconds timespan(100 + random_offset);
+    std::this_thread::sleep_for(timespan);
+}
+
+
 void* thread_producer_even(void* argument) {
     while(true) {
 
@@ -82,6 +94,7 @@ void* thread_producer_even(void* argument) {
         buffer.put(i);
         cout << "Even Producer: " << i << endl;
         i += 2;
+        i %= 50;
 
         if (can_produce_odd() && number_of_producers_odd_waiting > 0) {
             sem_post(&producer_odd);
@@ -96,9 +109,8 @@ void* thread_producer_even(void* argument) {
             sem_post(&mutex);
         }
 
-        sleep(1);
+        random_sleep();
     }
-    return NULL;
 }
 
 
@@ -115,6 +127,7 @@ void* thread_producer_odd(void* argument) {
         buffer.put(j);
         cout << "Odd Producer: " << j << endl;
         j += 2;
+        j %= 50;
 
         if (can_produce_even() && number_of_producers_even_waiting > 0) {
             sem_post(&producer_even);
@@ -129,10 +142,8 @@ void* thread_producer_odd(void* argument) {
             sem_post(&mutex);
         }
 
-        sleep(1);
+        random_sleep();
     }
-
-    return NULL;
 }
 
 
@@ -163,16 +174,18 @@ void* thread_consumer_even(void* argument) {
             sem_post(&mutex);
         }
  
-        sleep(1);
+        random_sleep();
     }
-    return NULL;
 }
 
 void* thread_consumer_odd(void* argument) {
     while (true) {
 
         sem_wait(&mutex);
-        if (!can_consume_even()) {
+        // Przyklad zakleszczenia
+        // if (!can_consume_even()) {
+
+        if (!can_consume_odd()) {
             ++number_of_consumers_odd_waiting;
             sem_post(&mutex);
             sem_wait(&consumer_odd);
@@ -195,7 +208,7 @@ void* thread_consumer_odd(void* argument) {
             sem_post(&mutex);
         }
 
-        sleep(1);
+        random_sleep();
     }
 }
 
@@ -221,6 +234,7 @@ void destroy_semaphores() {
 
 int main() {
     init_semaphores();
+    srand(time(NULL));
 
     cout << "p - add even producer" << endl;
     cout << "P - add odd producer" << endl;
