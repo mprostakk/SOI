@@ -20,4 +20,3 @@ posiada metody zliczające elementy parzyste i nieparzyste.
 
 Zakładamy, że semafory mają tylko
 operacje P i V.
-
